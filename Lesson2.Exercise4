@@ -1,0 +1,18 @@
+package com.cmcglobal.lesson3;
+
+import java.util.Scanner;
+
+public class Exercise4 {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+
+        //Exercise 4
+        System.out.println("Enter an integer: ");
+        int integer = scanner.nextInt();
+
+        System.out.println("After incrementing: " + (++integer));
+        System.out.println("After decrementing: " + (--integer));
+
+    }
+}
