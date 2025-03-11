@@ -1,0 +1,39 @@
+package com.cmcglobal.lesson3;
+
+import java.util.Random;
+import java.util.Scanner;
+
+public class Exercise3 {
+    public static void main(String[] args) {
+        Random rand = new Random();
+        Scanner scanner = new Scanner(System.in);
+
+        int i = rand.nextInt(9) + 1;
+        int attemptNo = 0;
+
+        System.out.println("Please enter your guess: ");
+        int guess = scanner.nextInt();
+
+        while (i != guess) {
+            if (i > guess) {
+                attemptNo++;
+                System.out.println("Too low! Try again.");
+                guess = scanner.nextInt();
+
+            } else {
+                attemptNo++;
+                System.out.println("Too high! Try again.");
+                guess = scanner.nextInt();
+
+            }
+        }
+        if (i == guess && attemptNo == 0) {
+            System.out.println("Correct! The number was " + i + "\nIt took you 1 attempt");
+        }
+        if (i == guess && attemptNo > 0) {
+            attemptNo++;
+            System.out.println("Correct! The number was " + i + "\nIt took you " + attemptNo + " attempts");
+        }
+
+    }
+}
