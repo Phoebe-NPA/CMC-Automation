@@ -3,34 +3,62 @@ package com.cmcglobal.lesson3;
 import java.util.Random;
 import java.util.Scanner;
 
-public class Exercise3 {
+public class Exercise3Advanced {
     public static void main(String[] args) {
         Random rand = new Random();
         Scanner scanner = new Scanner(System.in);
 
-        int i = rand.nextInt(9) + 1;
-        int attemptNo = 0;
+        System.out.println("Welcome to the Guess the Number Game!");
+        System.out.println("Choose a difficulty level: \n1. Easy (1-50) \n2. Medium (1-100) \n3. Hard (1-1000)");
+        System.out.println("Enter your choice (1/2/3):");
+        int level = scanner.nextInt(); // Read difficulty level from user
 
-        System.out.println("Please enter your guess: ");
-        int guess = scanner.nextInt();
+        // Inform user about the chosen range
+        switch (level) {
+            case 1: System.out.println("I have selected a number between 1 and 50. Try to guess it!");
+            break;
+            case 2: System.out.println("I have selected a number between 1 and 100. Try to guess it!");
+            break;
+            case 3: System.out.println("I have selected a number between 1 and 1000. Try to guess it!");
+            break;
+        }
 
+        int i; // Variable to store the randomly generated number
+        // Generate a random number based on difficulty level
+        if (level == 1) {
+            i = rand.nextInt(49) + 1;
+        } else if (level == 2) {
+            i = rand.nextInt(99) + 1;
+        } else {
+            i = rand.nextInt(999) + 1;
+        }
+
+        int attemptNo = 0; // Counter for number of attempts
+
+        System.out.println("Enter your guess: ");
+        int guess = scanner.nextInt(); // Read user's first guess
+
+        // Loop until the user guesses correctly
         while (i != guess) {
-            if (i > guess) {
-                attemptNo++;
+            if (i > guess) { // If guess is too low
+                attemptNo++; // Attempt +1 for each wrong guess
                 System.out.println("Too low! Try again.");
+                System.out.println("Enter your guess: ");
                 guess = scanner.nextInt();
 
-            } else {
+            } else { // If guess is too high
                 attemptNo++;
                 System.out.println("Too high! Try again.");
+                System.out.println("Enter your guess: ");
                 guess = scanner.nextInt();
 
             }
         }
-        if (i == guess && attemptNo == 0) {
+        // Display result based on number of attempts
+        if (i == guess && attemptNo == 0) {// If correct on the first attempt
             System.out.println("Correct! The number was " + i + "\nIt took you 1 attempt");
         }
-        if (i == guess && attemptNo > 0) {
+        if (i == guess && attemptNo > 0) {// If multiple attempts were made
             attemptNo++;
             System.out.println("Correct! The number was " + i + "\nIt took you " + attemptNo + " attempts");
         }
