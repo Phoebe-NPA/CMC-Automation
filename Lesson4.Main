@@ -1,0 +1,23 @@
+package com.cmcglobal.lesson4;
+import com.cmcglobal.lesson4.Book;
+import com.cmcglobal.lesson4.Library;
+import com.cmcglobal.lesson4.Dog;
+
+public class Main {
+    public static void main(String[] args) {
+
+        Library.addBook(new Book("The Great Gatsby", "F. Scott Fitzgerald", "1234")); //inline object creation
+        Library.addBook(new Book("Bad science", "D. Samuel Mill", "4323"));
+        Library.addBook(new Book("The Great Gatsby", "F. Scott Fitzgerald", "1235"));
+        System.out.println("---------------");
+        Library.searchBook("The Great Gatsby");
+        Library.removeBook("1234");
+        Library.searchBook("The Great Gatsby");
+        System.out.println("---------------");
+        Library.borrowBook("4323");
+        Library.borrowBook("4323");
+        Library.borrowBook("3434");
+        Library.returnBook("4323");
+        Library.displayAll();
+    }
+}
