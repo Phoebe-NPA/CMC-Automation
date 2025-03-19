@@ -1,0 +1,76 @@
+package com.cmcglobal.lesson4;
+
+public class Library {
+    private static Book[] books = new Book[10];
+    private static int bookCount = 0;
+    
+
+    public static void addBook(Book book) {
+            if (bookCount < books.length) {
+                books[bookCount] = book;
+                bookCount+=1;
+                System.out.println("Book added");
+        }
+    }
+
+    public static void removeBook(String isbn) {
+        for (int i = 0; i < bookCount; i++) {
+            if (books[i].getIsbn().equals(isbn)) {
+                books[i] = books[bookCount - 1];
+                books[bookCount - 1] = null;
+                System.out.println("Book removed successfully.");
+                bookCount--;
+                return;
+            }
+        }
+    }
+
+
+    public static void searchBook(String query) {  // Removed '?'
+        boolean found = false;
+        for (int i = 0; i < bookCount; i++) {
+            if ((books[i].getTitle().equalsIgnoreCase(query) || books[i].getAuthor().equalsIgnoreCase(query))) {
+                System.out.println(books[i].getBookDetails());
+                found = true;
+            }
+        }
+        if (!found) {
+            System.out.println("Book not found");
+        }
+    }
+
+
+    public static void displayAll () {
+        for (int i = 0; i < bookCount; i++) {
+            System.out.println(books[i].getBookDetails());
+        }
+    }
+
+
+    public static void borrowBook(String isbn) {
+        for (int i = 0; i < bookCount; i++) {
+            if (books[i].getIsbn().equals(isbn)) {
+                if (books[i].getAvailability()) {
+                    System.out.println("Successfully borrowed");
+                    books[i].borrowBook();
+                } else {
+                    System.out.println("This book has been borrowed");
+                }
+                return;
+            }
+        }
+        System.out.println("Book not found");
+    }
+
+    public static void returnBook (String isbn) {
+        for (int i = 0; i < bookCount; i++) {
+            if (books[i].getIsbn().equals(isbn)) {
+                System.out.println("Succesfully returned");
+                books[i].returnBook();
+                return;
+            }
+        }
+        System.out.println("Book not found");
+    }
+    
+}
