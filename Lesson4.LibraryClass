@@ -10,7 +10,9 @@ public class Library {
                 books[bookCount] = book;
                 bookCount+=1;
                 System.out.println("Book added");
-        }
+        } else {
+                System.out.println("Library is full");
+            }
     }
 
     public static void removeBook(String isbn) {
@@ -23,6 +25,7 @@ public class Library {
                 return;
             }
         }
+        System.out.println("Book not found");
     }
 
 
