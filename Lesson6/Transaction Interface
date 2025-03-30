@@ -1,0 +1,7 @@
+package com.cmcglobal.lesson6;
+
+public interface Transaction {
+    double deposit(double amount);
+    double deposit(double amount, String currency);
+    double withdraw(double amount);
+}
