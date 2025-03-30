@@ -1,0 +1,22 @@
+package com.cmcglobal.lesson6;
+
+public class Main {
+    public static void main(String[] args) {
+
+        BankAccount current = new CurrentAccount("Natalie", 0);
+        BankAccount savings = new SavingsAccount("Nunez", 5000000);
+
+        current.deposit(40, "USD");
+        current.deposit(500000);
+        current.displayBalance();
+        current.withdraw(40000);
+        current.displayBalance();
+
+        savings.withdraw(1000000);
+        savings.displayBalance();
+        savings.deposit(2000000);
+        savings.displayBalance();
+        savings.deposit(100, "EUR");
+        savings.displayBalance();
+    }
+}
