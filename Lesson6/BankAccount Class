@@ -1,0 +1,17 @@
+package com.cmcglobal.lesson6;
+import com.cmcglobal.lesson6.CurrentAccount;
+import com.cmcglobal.lesson6.SavingsAccount;
+
+public abstract class BankAccount implements Transaction{
+    String accountHolder;
+    double balance;
+    double deposit = 0;
+    public BankAccount(String accountHolder, double balance) {
+        this.accountHolder = accountHolder;
+        this.balance = balance;
+    }
+    public abstract double withdraw(double amount);
+    public void displayBalance() {
+        System.out.println("Account: " + accountHolder + "\nBalance: " + balance);
+    }
+}
