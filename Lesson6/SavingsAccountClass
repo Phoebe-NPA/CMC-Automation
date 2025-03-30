@@ -1,0 +1,42 @@
+package com.cmcglobal.lesson6;
+
+public class SavingsAccount extends BankAccount implements Transaction{
+
+    public SavingsAccount(String accountHolder, double balance) {
+        super(accountHolder, balance);
+    }
+
+    @Override
+    public double deposit(double amount) {
+        System.out.println(amount + " has been deposited");
+        return balance = balance + amount;
+    }
+
+    @Override
+    public double withdraw(double amount) {
+        if (balance >= amount) {
+            System.out.println(amount + " has been withdrawn");
+            return balance = balance - amount;
+        } else {
+            System.out.println("Fund not enough");
+            return balance;
+        }
+    }
+
+    //Overloading
+    public double conversion(double amount, String currency) {
+        if (currency.equals("USD")) {
+            return amount * 25000;
+        } else if (currency.equals("EUR")) {
+            return amount * 30000;
+        } else {
+            return amount;
+        }
+    }
+
+    public double deposit(double amount, String currency) {
+        double convertedAmount = conversion(amount, currency);
+        System.out.println(convertedAmount + " has been deposited");
+        return balance += convertedAmount;
+    }
+}
