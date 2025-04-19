@@ -1,0 +1,107 @@
+package com.cmcglobal.lesson7;
+import java.util.List;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.edge.EdgeDriver;
+
+
+public class RunTest {
+    static WebDriver driver;
+    @BeforeEach
+    public void beforeEach() {
+        driver = new EdgeDriver();
+        driver.get("https://www.saucedemo.com/");
+    }
+
+    @Test //TC1.1: Check the correction of page title
+    public void testTitle() {
+        driver.getTitle();
+        Assertions.assertEquals("Swag Labs", driver.getTitle(), "TC1.1 passed");
+    }
+
+    @Test //TC1.2: Check the correction of url
+    public void testUrl() {
+        driver.getCurrentUrl();
+        Assertions.assertEquals("https://www.saucedemo.com/", driver.getCurrentUrl(), "TC1.2 passed");
+    }
+
+    @Test //TC2.1: Valid credentials
+    public void validLogin() {
+        driver.findElement(By.id("user-name")).sendKeys("standard_user");
+        driver.findElement(By.id("password")).sendKeys("secret_sauce");
+        WebElement buttonClick = driver.findElement(By.id("login-button"));
+        buttonClick.click();
+        //driver.findElement(By.id("login-button")).click(); => better way
+        Assertions.assertEquals("https://www.saucedemo.com/inventory.html", driver.getCurrentUrl(), "TC2.1 passed");
+    }
+
+    @Test //TC2.2: Invalid credentials
+    public void invalidLogin() {
+        driver.findElement(By.id("user-name")).sendKeys("abc");
+        driver.findElement(By.id("password")).sendKeys("xyz");
+        driver.findElement(By.id("login-button")).click();
+        WebElement error = driver.findElement(By.cssSelector("[data-test='error']"));
+        Assertions.assertTrue(error.isDisplayed());
+    }
+
+    @Test //TC3.1: Get product list - check the number of products
+    public void getProductList () {
+        validLogin();
+        List<WebElement> products = driver.findElements(By.className("inventory_item"));
+        Assertions.assertEquals(6, products.size(), "TC3.1 passed");
+    }
+
+    @Test //TC3.2: Get product name - check if each product's name is visible
+    public void getProductName() {
+        validLogin();
+        List<WebElement> productNames = driver.findElements(By.className("inventory_item_name"));
+        System.out.println(productNames);
+        for (WebElement productName : productNames) {
+            Assertions.assertTrue(productName.isDisplayed());
+        }
+    }
+
+    @Test // TC4.1: Checkout with all products successfully
+    public void checkoutWithAllProduct() throws InterruptedException {
+        validLogin();
+//        driver.manage().window().maximize();
+//        Thread.sleep(2000);
+        List<WebElement> addButtons = driver.findElements(By.className("btn_inventory"));
+        for (WebElement button : addButtons) {
+            button.click();
+            Thread.sleep(300);
+        }
+        driver.findElement(By.className("shopping_cart_link")).click();
+        driver.findElement(By.id("checkout")).click();
+        driver.findElement(By.id("first-name")).sendKeys("Phoebe");
+        driver.findElement(By.id("last-name")).sendKeys("Nguyen");
+        driver.findElement(By.id("postal-code")).sendKeys("100000");
+        driver.findElement(By.id("continue")).click();
+        driver.findElement(By.id("finish")).click();
+        Assertions.assertTrue(driver.findElement(By.className("checkout_complete_container")).isDisplayed());
+    }
+
+    @Test // TC4.2: Checkout with no product added to cart
+    public void checkoutWithNoInformation() {
+        validLogin();
+        driver.findElement(By.className("shopping_cart_link")).click();
+        driver.findElement(By.id("checkout")).click();
+        driver.findElement(By.id("first-name")).sendKeys("");
+        driver.findElement(By.id("last-name")).sendKeys("");
+        driver.findElement(By.id("postal-code")).sendKeys("");
+        driver.findElement(By.id("continue")).click();
+
+        Assertions.assertTrue(driver.findElement(By.cssSelector("[data-test=\"error\"]")).isDisplayed());
+    }
+
+    @AfterEach
+    public void afterEach() {
+        driver.quit();
+    }
+}
