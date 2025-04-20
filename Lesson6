@@ -21,14 +21,12 @@ public class RunTest {
 
     @Test //TC1.1: Check the correction of page title
     public void testTitle() {
-        driver.getTitle();
-        Assertions.assertEquals("Swag Labs", driver.getTitle(), "TC1.1 passed");
+        Assertions.assertEquals("Swag Labs", driver.getTitle());
     }
 
     @Test //TC1.2: Check the correction of url
     public void testUrl() {
-        driver.getCurrentUrl();
-        Assertions.assertEquals("https://www.saucedemo.com/", driver.getCurrentUrl(), "TC1.2 passed");
+        Assertions.assertEquals("https://www.saucedemo.com/", driver.getCurrentUrl());
     }
 
     @Test //TC2.1: Valid credentials
@@ -38,7 +36,7 @@ public class RunTest {
         WebElement buttonClick = driver.findElement(By.id("login-button"));
         buttonClick.click();
         //driver.findElement(By.id("login-button")).click(); => better way
-        Assertions.assertEquals("https://www.saucedemo.com/inventory.html", driver.getCurrentUrl(), "TC2.1 passed");
+        Assertions.assertEquals("https://www.saucedemo.com/inventory.html", driver.getCurrentUrl());
     }
 
     @Test //TC2.2: Invalid credentials
@@ -54,7 +52,7 @@ public class RunTest {
     public void getProductList () {
         validLogin();
         List<WebElement> products = driver.findElements(By.className("inventory_item"));
-        Assertions.assertEquals(6, products.size(), "TC3.1 passed");
+        Assertions.assertEquals(6, products.size());
     }
 
     @Test //TC3.2: Get product name - check if each product's name is visible
