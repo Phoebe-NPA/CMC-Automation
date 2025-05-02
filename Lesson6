@@ -13,7 +13,7 @@ import org.openqa.selenium.edge.EdgeDriver;
 
 public class RunTest {
     static WebDriver driver;
-    @BeforeEach
+    @BeforeEach //runs before each test case (it opens a new Edge browser and navigates to the Saucedemo login page)
     public void beforeEach() {
         driver = new EdgeDriver();
         driver.get("https://www.saucedemo.com/");
@@ -29,37 +29,45 @@ public class RunTest {
         Assertions.assertEquals("https://www.saucedemo.com/", driver.getCurrentUrl());
     }
 
-    @Test //TC2.1: Valid credentials
+    @Test //TC2.1: Login with valid credentials
     public void validLogin() {
+        // Enter username and password
         driver.findElement(By.id("user-name")).sendKeys("standard_user");
         driver.findElement(By.id("password")).sendKeys("secret_sauce");
+        // Click the login button
         WebElement buttonClick = driver.findElement(By.id("login-button"));
         buttonClick.click();
-        //driver.findElement(By.id("login-button")).click(); => better way
+        // Assert that the login redirects to inventory page
         Assertions.assertEquals("https://www.saucedemo.com/inventory.html", driver.getCurrentUrl());
     }
 
-    @Test //TC2.2: Invalid credentials
+    @Test //TC2.2: Login with invalid credentials and expect error message
     public void invalidLogin() {
         driver.findElement(By.id("user-name")).sendKeys("abc");
         driver.findElement(By.id("password")).sendKeys("xyz");
         driver.findElement(By.id("login-button")).click();
+        // Locate the error message element
         WebElement error = driver.findElement(By.cssSelector("[data-test='error']"));
+        // Check that the error message is displayed
         Assertions.assertTrue(error.isDisplayed());
     }
 
-    @Test //TC3.1: Get product list - check the number of products
+    @Test //TC3.1: Get list of products and verify the total count
     public void getProductList () {
         validLogin();
+        // Find all product elements
         List<WebElement> products = driver.findElements(By.className("inventory_item"));
+        // There should be 6 products
         Assertions.assertEquals(6, products.size());
     }
 
-    @Test //TC3.2: Get product name - check if each product's name is visible
+    @Test //TC3.2: Get product name - Ensure all product names are displayed
     public void getProductName() {
         validLogin();
+        // Find all elements representing product names
         List<WebElement> productNames = driver.findElements(By.className("inventory_item_name"));
         System.out.println(productNames);
+        // Check that each product name is visible
         for (WebElement productName : productNames) {
             Assertions.assertTrue(productName.isDisplayed());
         }
@@ -68,36 +76,40 @@ public class RunTest {
     @Test // TC4.1: Checkout with all products successfully
     public void checkoutWithAllProduct() throws InterruptedException {
         validLogin();
-//        driver.manage().window().maximize();
-//        Thread.sleep(2000);
+        // Add all products to cart
         List<WebElement> addButtons = driver.findElements(By.className("btn_inventory"));
         for (WebElement button : addButtons) {
             button.click();
-            Thread.sleep(300);
+            Thread.sleep(300); // Slight delay for UI update
         }
+        // Navigate to cart and proceed to checkout
         driver.findElement(By.className("shopping_cart_link")).click();
         driver.findElement(By.id("checkout")).click();
+        // Fill in user details
         driver.findElement(By.id("first-name")).sendKeys("Phoebe");
         driver.findElement(By.id("last-name")).sendKeys("Nguyen");
         driver.findElement(By.id("postal-code")).sendKeys("100000");
         driver.findElement(By.id("continue")).click();
         driver.findElement(By.id("finish")).click();
+        // Confirm that checkout completed successfully
         Assertions.assertTrue(driver.findElement(By.className("checkout_complete_container")).isDisplayed());
     }
 
-    @Test // TC4.2: Checkout with no product added to cart
+    @Test // TC4.2: Checkout with missing information and verify error is shown
     public void checkoutWithNoInformation() {
         validLogin();
         driver.findElement(By.className("shopping_cart_link")).click();
         driver.findElement(By.id("checkout")).click();
+        // Leave all fields empty
         driver.findElement(By.id("first-name")).sendKeys("");
         driver.findElement(By.id("last-name")).sendKeys("");
         driver.findElement(By.id("postal-code")).sendKeys("");
         driver.findElement(By.id("continue")).click();
-
+        // Check if error message is displayed
         Assertions.assertTrue(driver.findElement(By.cssSelector("[data-test=\"error\"]")).isDisplayed());
     }
 
+    // Clean up the browser after each test case
     @AfterEach
     public void afterEach() {
         driver.quit();
