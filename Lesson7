@@ -1,0 +1,191 @@
+package com.cmcglobal.lesson7;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.edge.EdgeDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+
+import java.time.Duration;
+import java.util.List;
+
+public class Exercise7 {
+    static WebDriver driver = new EdgeDriver();
+    // This method runs before each test, opening the base URL
+    @BeforeEach
+    public void beforeEach() {
+        driver.get("https://the-internet.herokuapp.com/");
+    }
+
+    // TC1: Test if checkbox is removed after clicking Remove button
+    @Test
+    public void checkBoxRemoval() {
+        // Remove the checkbox
+        driver.findElement(By.linkText("Dynamic Controls")).click();
+        driver.findElement(By.cssSelector("[type=\"checkbox\"]")).click();
+        driver.findElement(By.xpath("//*[@id=\"checkbox-example\"]/button")).click();
+        // Wait until the message appears indicating checkbox is removed
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("message")));
+        // Verify the checkbox is no longer present on the page
+        List<WebElement> checkboxPresence = driver.findElements(By.cssSelector("[type=\"checkbox\"]"));
+        Assertions.assertTrue(checkboxPresence.isEmpty());
+    }
+
+    // TC2: Test if textbox is enabled
+    @Test
+    public void textboxEnabled() {
+        // Enable the input field
+        driver.findElement(By.linkText("Dynamic Controls")).click();
+        driver.findElement(By.xpath("//*[@id=\"input-example\"]/button")).click();
+        // Wait until the message appears indicating textbox is enabled
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("message")));
+        // Send text to the now-enabled textbox and verify it was entered
+        driver.findElement(By.cssSelector("input[type=\"text\"]")).sendKeys("abc");
+        Assertions.assertEquals("abc", driver.findElement(By.cssSelector("input[type=\"text\"]")).getAttribute("value"));
+    }
+
+    // TC3: Test if the text is displayed
+    @Test
+    public void loadingExample1() {
+        // Navigate to Dynamic Loading page and choose Example 1
+        driver.findElement(By.linkText("Dynamic Loading")).click();
+        driver.findElement(By.linkText("Example 1: Element on page that is hidden")).click();
+        // Click the Start button to start loading
+        driver.findElement(By.cssSelector("#start button")).click();
+        // Wait until "Hello World!" is visible on the page
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(7));
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("finish")));
+        // Verify that the correct text is displayed
+        Assertions.assertEquals("Hello World!", driver.findElement(By.id("finish")).getText());
+    }
+
+    // TC4: Test if the text is present and displayed
+    @Test
+    public void loadingExample2() {
+        driver.findElement(By.linkText("Dynamic Loading")).click();
+        driver.findElement(By.linkText("Example 2: Element rendered after the fact")).click();
+        driver.findElement(By.tagName("button")).click();
+        // Wait until the text "Hello World!" is present and visible
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(7));
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.id("finish")));
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("finish")));
+        // Verify final output text
+        Assertions.assertEquals("Hello World!", driver.findElement(By.id("finish")).getText());
+    }
+
+    // TC5: Test if the correct option is selected as expected
+    @Test
+    public void dropDown1() {
+        // Navigate to Dropdown page
+        driver.findElement(By.linkText("Dropdown")).click();
+        Select dropdown = new Select(driver.findElement(By.id("dropdown")));
+        dropdown.selectByIndex(1); // Select "Option 1"
+        // Verify the selected option by its value
+        Assertions.assertEquals("Option 1", dropdown.getFirstSelectedOption().getText());
+    }
+
+    // TC6: Test if the correct option is selected as expected
+    @Test
+    public void dropDown2() {
+        driver.findElement(By.linkText("Dropdown")).click();
+        // Select Option 2 by index
+        Select dropdown = new Select(driver.findElement(By.id("dropdown")));
+        dropdown.selectByIndex(2);
+        // Validate selected text
+        Assertions.assertEquals("Option 2", dropdown.getFirstSelectedOption().getText());
+    }
+
+    // TC7: Test if clicking Home button navigates to the correct page
+    @Test
+    public void clickHomeButton() {
+        driver.findElement(By.linkText("Disappearing Elements")).click();
+        // Click on Home button to return to main page
+        driver.findElement(By.linkText("Home")).click();
+        // Verify redirection URL
+        Assertions.assertEquals("https://the-internet.herokuapp.com/", driver.getCurrentUrl());
+    }
+
+    // TC8: Test if clicking other buttons navigates to the correct page
+    @Test
+    public void clickOtherButtons() {
+        driver.findElement(By.linkText("Disappearing Elements")).click();
+        // Find all the buttons (links) on the page
+        List<WebElement> buttonList = driver.findElements(By.tagName("a"));
+        int Count = 0;
+        // Attempt to click other buttons and check if they return "Not Found"
+        for (int i = 2; i<5; i++) {
+            buttonList.get(i).click();
+            String text = driver.findElement(By.tagName("h1")).getText();
+            if (text.equals("Not Found")) {
+                Count++;
+            }
+            driver.navigate().back();
+        }
+        // Check how many times "Not Found" page was shown
+        Assertions.assertEquals(3, Count);
+    }
+
+    // TC9: Test if the alert message is correct
+    @Test
+    public void JSAlert() {
+        // Navigate to JavaScript Alerts page
+        driver.findElement(By.linkText("JavaScript Alerts")).click();
+        // Trigger JS Alert and verify its text
+        driver.findElement(By.cssSelector("[onclick=\"jsAlert()\"]")).click();
+        Assertions.assertEquals("I am a JS Alert", driver.switchTo().alert().getText());
+    }
+
+    // TC10: Test if the prompt alert receive input value 
+    @Test
+    public void JSPrompt() {
+        // Navigate to JavaScript Alerts page
+        driver.findElement(By.linkText("JavaScript Alerts")).click();
+        // Trigger JS Prompt, enter input and accept it
+        driver.findElement(By.cssSelector("[onclick=\"jsPrompt()\"]")).click();
+        driver.switchTo().alert().sendKeys("abc");
+        driver.switchTo().alert().accept();
+        // Validate if the input was received correctly
+        Assertions.assertEquals("You entered: abc", driver.findElement(By.id("result")).getText());
+    }
+
+    // TC11: Test if new buttons are added after clicking "add element"
+    @Test
+    public void addElements() {
+        driver.findElement(By.linkText("Add/Remove Elements")).click();
+        // Click Add Element button twice
+        driver.findElement(By.cssSelector("button[onclick=\"addElement()\"]")).click();
+        driver.findElement(By.cssSelector("button[onclick=\"addElement()\"]")).click();
+        List<WebElement> newElement = driver.findElements(By.className("added-manually"));
+        // Check if 2 delete buttons were added accordingly
+        Assertions.assertEquals(2, newElement.size());
+    }
+
+    // TC12: Test if new buttons are removed after clicking "delete"
+    @Test void removeElements() {
+        // Call previous method to add 2 elements
+        addElements();
+        // Find and click on each delete button
+        List<WebElement> newElement = driver.findElements(By.className("added-manually"));
+        for (WebElement element : newElement) {
+            element.click();
+        }
+        // Verify all elements were removed
+        List<WebElement> newElementAfter = driver.findElements(By.className("added-manually"));
+        Assertions.assertTrue(newElementAfter.isEmpty());
+    }
+
+    // This method runs after each test, closing the website
+    @AfterEach
+    public void afterEach() {
+        driver.quit();
+    }
+}
