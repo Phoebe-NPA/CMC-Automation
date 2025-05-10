@@ -9,7 +9,7 @@ import com.cmcglobal.lesson8.LoginPage;
 import com.cmcglobal.lesson8.BasePage;
 import com.cmcglobal.lesson8.InventoryPage;
 
-/**
+/*
  * This class contains automated test cases for saucedemo.com.
  * It extends BasePage to inherit WebDriver setup and utilities.
  */
