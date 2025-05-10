@@ -4,15 +4,14 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.edge.EdgeDriver;
-/*
- * This class represents the login page of the Saucedemo application (following POM model)
- */
+
+ // This class represents the login page of the Saucedemo application (following POM model)
+
 public class LoginPage {
     // WebDriver instance used to interact with the browser
     public WebDriver driver;
-    /**
-     * Constructor for LoginPage class.
-     */
+    
+    // Constructor for LoginPage class.
     public LoginPage(WebDriver driver) {
         this.driver = driver;
     }
