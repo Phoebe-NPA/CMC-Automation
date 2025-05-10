@@ -1,0 +1,49 @@
+package com.cmcglobal.lesson8;
+
+import org.junit.jupiter.api.Assertions;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+
+    // This class represents the checkout page and process in the Saucedemo application
+    public class CheckoutPage {
+    public WebDriver driver; // WebDriver instance to interact with browser elements
+    // Constructor that initializes the CheckoutPage with a WebDriver instance
+    public CheckoutPage(WebDriver driver) {
+        this.driver = driver;
+    }
+
+     // Locator for the elements used
+    public By shoppingCart = By.className("shopping_cart_link");
+    public By goToCheckout = By.id("checkout");
+    public By firstName = By.id("first-name");
+    public By lastName = By.id("last-name");
+    public By postalCode = By.id("postal-code");
+    public By continueButton = By.id("continue");
+    public By finishButton = By.id("finish");
+    public By completeCheck = By.xpath("//*[@id=\"checkout_complete_container\"]/h2");
+    public By errorDisplay = By.cssSelector("[data-test=\"error\"]");
+
+   // Performs the initial part of the checkout process
+    public void checkoutProcess(String firstname, String lastname, String zip) {
+        driver.findElement(shoppingCart).click();
+        driver.findElement(goToCheckout).click();
+        driver.findElement(firstName).sendKeys(firstname);
+        driver.findElement(lastName).sendKeys(lastname);
+        driver.findElement(postalCode).sendKeys(zip);
+        driver.findElement(continueButton).click();
+    }
+
+    //Completes the full checkout process with valid inputs
+    public boolean allItemCheckout() {
+        checkoutProcess("a", "b", "c"); // Fill out the form with placeholder values and proceed to checkout
+        driver.findElement(finishButton).click();
+        return driver.findElement(completeCheck).isDisplayed(); // Check if the confirmation message is displayed
+    }
+
+    // Attempts to checkout with empty customer information fields.
+    public boolean noInfoCheckout() {
+        checkoutProcess("", "", ""); // Leave all fields blank and continue
+        return driver.findElement(errorDisplay).isDisplayed(); // Verify that an error message is shown
+    }
+
+    }
