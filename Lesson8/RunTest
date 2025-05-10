@@ -1,0 +1,83 @@
+package com.cmcglobal.lesson8;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.edge.EdgeDriver;
+import com.cmcglobal.lesson8.LoginPage;
+import com.cmcglobal.lesson8.BasePage;
+import com.cmcglobal.lesson8.InventoryPage;
+
+/**
+ * This class contains automated test cases for saucedemo.com.
+ * It extends BasePage to inherit WebDriver setup and utilities.
+ */
+public class RunTest extends BasePage{
+
+
+    @Test //TC1.1: Check the correction of page title
+    public void testTitle() {
+        // Assert that the actual title matches the expected one
+        Assertions.assertEquals("Swag Labs", driver.getTitle());
+    }
+
+    @Test //TC1.2: Check the correction of url
+    public void testUrl() {
+           // Assert that the actual URL is the login page URL
+        Assertions.assertEquals("https://www.saucedemo.com/", driver.getCurrentUrl());
+    }
+
+    @Test //TC2.1: Valid credentials
+    public void validLogin() {
+       // Create LoginPage object and perform login
+        LoginPage loginPage = new LoginPage(driver);
+        loginPage.logIn("standard_user", "secret_sauce");
+        // After successful login, the URL should redirect to inventory page
+        Assertions.assertEquals("https://www.saucedemo.com/inventory.html", driver.getCurrentUrl());
+    }
+
+    @Test //TC2.2: Invalid credentials
+    public void invalidLogin() {
+       // Create LoginPage object and perform login
+        LoginPage loginPage = new LoginPage(driver);
+        loginPage.logIn("abc", "xyz");
+       // Assert that error message is displayed
+        Assertions.assertTrue(loginPage.errorNotice());
+    }
+
+    @Test //TC3.1: Get product list - check the number of products
+    public void getProductList() {
+      // Create InventoryPage object
+        InventoryPage inventoryPage = new InventoryPage(driver);
+       // Perform a valid login to access inventory
+        validLogin();
+      // Assert that there are exactly 6 products displayed
+        Assertions.assertEquals(6, inventoryPage.getListItem());
+    }
+
+    @Test // TC3.2: Get product name - check if each product's name is visible
+    public void getProductName() {
+        InventoryPage inventoryPage = new InventoryPage(driver);
+        validLogin();
+// Loop through each product name WebElement and check if it is displayed
+        inventoryPage.getProductNames().forEach(p -> Assertions.assertTrue(p.isDisplayed()));
+    }
+
+    @Test // TC4.1: Checkout with all products successfully
+    public void checkoutWithAllProduct() {
+// Create CheckoutPage object
+        CheckoutPage checkoutPage = new CheckoutPage(driver);
+        validLogin();
+ // Assert that checkout with all items is successful
+        Assertions.assertTrue(checkoutPage.allItemCheckout());
+    }
+
+    @Test // TC4.2: Checkout with no product added to cart
+    public void checkoutWithNoInformation() {
+        CheckoutPage checkoutPage = new CheckoutPage(driver);
+        validLogin();
+// Assert that the system handles checkout attempt with no info correctly
+        Assertions.assertTrue(checkoutPage.noInfoCheckout());
+    }
+}
