@@ -1,0 +1,45 @@
+package com.cmcglobal.lesson8;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.edge.EdgeDriver;
+/**
+ * This class represents the login page of the Saucedemo application (following POM model)
+ */
+public class LoginPage {
+    // WebDriver instance used to interact with the browser
+    public WebDriver driver;
+    /**
+     * Constructor for LoginPage class.
+     */
+    public LoginPage(WebDriver driver) {
+        this.driver = driver;
+    }
+
+// Locators for the elements that would be used
+    public By usernameLocator = By.id("user-name");
+    public By passwordLocator = By.id("password");
+    public By buttonClick = By.id("login-button");
+    public By error = By.cssSelector("[data-test='error']");
+
+   // Enters the given username into the username input field
+    public void enterUsername(String username) {
+        driver.findElement(usernameLocator).sendKeys(username);
+    }
+    // Enters the given password into the password input field
+    public void enterPassword (String password) {
+        driver.findElement(passwordLocator).sendKeys(password);
+    }
+    // Performs the full login operation: enters username, password, and clicks login
+    public void logIn(String username, String password) {
+        enterUsername(username);
+        enterPassword(password);
+        driver.findElement(buttonClick).click();
+    }
+
+   // Checks if the error message is displayed after a failed login attempt
+    public boolean errorNotice() {
+         return driver.findElement(error).isDisplayed();
+    }
+}
