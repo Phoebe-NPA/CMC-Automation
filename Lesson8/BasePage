@@ -1,0 +1,27 @@
+package com.cmcglobal.lesson8;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.edge.EdgeDriver;
+
+/**
+ * BasePage class provides common setup and teardown functionality
+ */
+public class BasePage {
+    public WebDriver driver;
+
+    @BeforeEach
+    public void openBrowser() {
+        driver = new EdgeDriver();  // Create a new instance of EdgeDriver
+        driver.get("https://www.saucedemo.com/"); // Open the URL of the application under test
+        driver.manage().window().maximize();  // Maximize the browser window
+    }
+
+    @AfterEach
+    public void tearDown() {
+        driver.quit();  // Quit the browser 
+    }
+
+
+}
